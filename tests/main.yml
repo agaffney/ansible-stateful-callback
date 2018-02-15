@@ -1,6 +1,21 @@
 ---
 - hosts: localhost
   gather_facts: no
+  vars:
+    ansible_stateful_config:
+      - var_name: file_paths
+        capture:
+          - action: file
+            field: dest
+          - action: file
+            field: path
+          - action: copy
+            field: dest
+      - var_name: debug_msgs
+        capture:
+          - action: debug
+            field: msg
+            from: result
   roles:
     - name: ../..
   tasks:
@@ -9,7 +24,11 @@
         state: touch
 
     - file:
-        dest: /tmp/bar
+        path: /tmp/bar
         state: touch
 
-    - debug: var=file_paths
+    - debug: msg="{{ file_paths }}"
+
+    - debug: msg="just a test"
+
+    - debug: var=debug_msgs
